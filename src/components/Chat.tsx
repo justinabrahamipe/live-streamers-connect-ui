@@ -1,5 +1,5 @@
 import Navbar from "../components/Navbar";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import ChatBubbleSender from "./ChatBubbleSender";
 
 // const WS_URL = "ws://localhost:8080";
