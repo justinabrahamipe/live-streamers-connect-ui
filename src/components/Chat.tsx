@@ -2,31 +2,33 @@ import Navbar from "../components/Navbar";
 import { useEffect, useState } from "react";
 import ChatBubbleSender from "./ChatBubbleSender";
 
-const WS_URL = "ws://localhost:8080";
-
+// const WS_URL = "ws://localhost:8080";
+// const WS_URL = "ws://live-streamers-connect-api.onrender.com/ws";
+const WS_URL = process.env.REACT_APP_WS || "";
 function Chat() {
   const ws = new WebSocket(WS_URL);
-
   const [messageText, setMessageText] = useState("");
-  const [receivedMessages, setReceivedMessages] = useState<any[]>([]);
+  const [receivedMessages, setReceivedMessages] = useState<Chat[]>([]);
 
-  // ws.onmessage = function (event) {
-  //   console.log(event);
-  // };
   ws.addEventListener("message", (event) => {
     console.log(event);
   });
 
   const handleSendMessage = () => {
     if (messageText === "") return;
-    const message: { sender: string; message: string; timestamp: number } = {
-      sender: "id",
+    const message: Chat = {
+      room: "some room",
+      id: "no id",
+      sender: "Justin",
       message: messageText,
-      timestamp: new Date().getTime(),
+      created: new Date(),
+      lastUsed: new Date(),
     };
-    ws.send(JSON.stringify(messageText));
+    // ws.addEventListener("open", () => {
+    console.log("Connected to WebSocket server");
+    ws.send(JSON.stringify(message));
+    // });
     setMessageText("");
-
     ws.addEventListener("message", (e) => {
       const data = JSON.parse(e?.data);
       console.log(data);
@@ -38,8 +40,8 @@ function Chat() {
     <main className="min-h-screen bg-black">
       <Navbar />
       <div className="bg-slate-900 min-h-max">
-        {receivedMessages?.map((message) => (
-          <ChatBubbleSender message={message?.message} key={message?._id} />
+        {receivedMessages?.map((chat: Chat) => (
+          <ChatBubbleSender chat={chat} />
         ))}
       </div>
       <div className="flex flex-row gap-2 m-2 ">

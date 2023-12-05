@@ -1,15 +1,22 @@
 import React from "react";
+import getRelativeTimeString from "../common/getRelativeTimeString";
 
-const ChatBubbleSender = ({ message }: { message: string }) => {
+type ChatBubbleSender = {
+  chat: Chat;
+};
+
+function ChatBubbleSender({ chat }: ChatBubbleSender) {
   return (
-    <div className="chat chat-end">
+    <div className="chat chat-end" key={chat?.id}>
       <div className="chat-header">
-        Obi-Wan Kenobi
-        <time className="text-xs opacity-50">2 hour ago</time>
+        {chat?.sender}
+        <time className="text-xs opacity-50 ml-2">
+          {getRelativeTimeString(chat?.created?.toString())}
+        </time>
       </div>
-      <div className="chat-bubble">{message}</div>
+      <div className="chat-bubble">{chat?.message}</div>
     </div>
   );
-};
+}
 
 export default ChatBubbleSender;
